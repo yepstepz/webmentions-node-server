@@ -1,0 +1,41 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       Int       @id @default(autoincrement())
+  url      String    @unique
+  photo    String
+  name     String?
+  type     String
+  mentions Mention[]
+}
+
+model Mention {
+  id          Int     @id @default(autoincrement())
+  url         String  @unique
+  published   String
+  wmReceived  String
+  wmId        Int     @unique
+  wmSource    String  @unique
+  wmTarget    String
+  wmProtocol  String
+  wmProperty  String
+  wmPrivate   Boolean @default(false)
+  inReplyTo   String?
+  likeOf      String?
+  repostOf    String?
+  bookmarkOf  String?
+  mentionOf   String?
+  rsvp        String?
+  authorId    Int
+  type        String
+  contentHTML String?
+  contentText String?
+  User        User    @relation(fields: [authorId], references: [id])
+}

@@ -61,7 +61,7 @@ fastify.route({
     } catch (e) {
       throw new Error(e);
     }
-    reply.send('kek')
+    reply.send({ status: 'success'})
   }
 })
 
@@ -108,7 +108,7 @@ fastify.route({
     } catch (e) {
       throw new Error(e);
     }
-    reply.send(data)
+    reply.send({ data })
 
   }
 })

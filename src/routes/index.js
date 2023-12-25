@@ -85,6 +85,35 @@ fastify.route({
 
 fastify.route({
   method: 'GET',
+  url: '/comments/:category',
+  json: true,
+  headers: {
+    'Accept': '*/*'
+  },
+  handler: async function (request, reply) {
+    let data = {};
+
+    try {
+      data = await prisma.mention.findMany({
+        orderBy: [
+          {
+            published: 'asc',
+          },
+        ],
+        include: {
+          User: true
+        }
+      })
+    } catch (e) {
+      throw new Error(e);
+    }
+    reply.send({ data })
+
+  }
+})
+
+fastify.route({
+  method: 'GET',
   url: '/comments/:category/:target',
   json: true,
   headers: {
@@ -100,6 +129,11 @@ fastify.route({
       );
 
       data = await prisma.mention.findMany({
+        orderBy: [
+          {
+            published: 'asc',
+          },
+        ],
         where: { wmTarget: href },
         include: {
           User: true

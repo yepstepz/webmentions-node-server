@@ -85,7 +85,7 @@ fastify.route({
 
 fastify.route({
   method: 'GET',
-  url: '/comments/:category',
+  url: '/:category/comments',
   json: true,
   headers: {
     'Accept': '*/*'
@@ -114,7 +114,7 @@ fastify.route({
 
 fastify.route({
   method: 'GET',
-  url: '/comments/:category/:target',
+  url: '/:category/comments/:target',
   json: true,
   headers: {
     'Accept': '*/*'
@@ -144,6 +144,31 @@ fastify.route({
     }
     reply.send({ data })
 
+  }
+})
+
+fastify.route({
+  method: 'GET',
+  url: '/:category',
+  json: true,
+  headers: {
+    'Accept': '*/*'
+  },
+  handler: async function (request, reply) {
+    let data = {};
+
+    try {
+      data = await prisma.mention.groupBy({
+        by: ['wmTarget'],
+        _count: {
+          _all: true
+        },
+      })
+    } catch (e) {
+      throw new Error(e);
+    }
+
+    reply.send({ data })
   }
 })
 

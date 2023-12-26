@@ -161,7 +161,13 @@ fastify.route({
       data = await prisma.mention.groupBy({
         by: ['wmTarget'],
         _count: {
-          _all: true
+          _all: true,
+          inReplyTo: true,
+          likeOf: true,
+          repostOf: true,
+          bookmarkOf: true,
+          mentionOf: true,
+          rsvp: true
         },
       })
     } catch (e) {

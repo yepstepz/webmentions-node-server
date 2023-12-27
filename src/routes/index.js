@@ -36,13 +36,19 @@ fastify.route({
   },
   handler: async function (request, reply) {
     try {
-      const processedInput = processInput(request.body);
-      const response = await discoverSource(processedInput);
-      parseSource(response);
+      const { sourceURLObject, targetURLObject } = processInput(request.body);
+      const response = await discoverSource({ sourceURLObject, targetURLObject });
+      parseSource(response, { sourceURLObject, targetURLObject });
     } catch (e) {
       throw new Error(e);
     }
-    reply.send({ source: request.body.source, target: request.body.target })
+    if (reply.statusCode >= 299) {
+      reply.statusCode = 500
+    }
+
+    reply.statusCode = 202;
+
+    reply.send({})
   }
 })
 

@@ -127,6 +127,7 @@ fastify.route({
   },
   handler: async function (request, reply) {
     let data = {};
+    let parsedData = {};
 
     try {
       const { href } = new URL(
@@ -144,11 +145,16 @@ fastify.route({
         include: {
           User: true
         }
-      })
+      });
+
+      parsedData = data.map(({User, ...rest}) => {
+        rest.user = User;
+        return rest
+      });
     } catch (e) {
       throw new Error(e);
     }
-    reply.send({ data })
+    reply.send({ data: parsedData })
 
   }
 })
